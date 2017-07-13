@@ -13,6 +13,35 @@ impl Vector3 {
     pub fn cross (u : Vector3, v : Vector3) -> Vector3 {
         Vector3 {x : u.y * v.z - u.z * v.y, y : u.z * v.x - u.x * v.z, z : u.x * v.y - u.y * v.x}
     }
+
+    pub fn square_magnitude (&self) -> f64 {
+        self.x.powf(2.0) + self.y.powf(2.0) + self.z.powf(2.0)
+    }
+
+    pub fn magnitude (&self) -> f64 {
+        self.square_magnitude().sqrt()
+    }
+
+    pub fn normalised (&self) -> Vector3 {
+        let mag = self.magnitude();
+        Vector3 {x : self.x / mag, y : self.y / mag, z : self.z / mag}
+    }
+
+    pub fn x_hat() -> Vector3 {
+        Vector3 {x : 1.0, y : 0.0, z : 0.0}
+    }
+
+    pub fn y_hat() -> Vector3 {
+        Vector3 {x : 0.0, y : 1.0, z : 0.0}
+    }
+
+    pub fn z_hat() -> Vector3 {
+        Vector3 {x : 0.0, y : 0.0, z : 1.0}
+    }
+
+    pub fn zero() -> Vector3 {
+        Vector3 {x : 0.0, y : 0.0, z : 0.0}
+    }
 }
 
 #[cfg(test)]
