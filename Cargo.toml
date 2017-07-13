@@ -1,0 +1,6 @@
+[package]
+name = "RustCloud"
+version = "0.1.0"
+authors = ["Phil Curzon <phil@novelfs.org>"]
+
+[dependencies]
