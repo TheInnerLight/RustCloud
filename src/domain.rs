@@ -1,4 +1,4 @@
-use na::Vector3;
+use na::{Vector2, Vector3};
 
 /// A two dimensional point with a defined vector from the origin
 trait Point2 {
@@ -12,7 +12,7 @@ trait Point3 {
 
 /// A three dimensional plane defined by a point3 and a vector3
 struct Plane3 { 
-    position : Point3, 
+    position : Box<Point3>, 
     normal : Vector3<f64> 
 }
 

@@ -1,6 +1,8 @@
 # RustCloud
 Rust Point Cloud library
 
+Travis: ![Build Status](https://travis-ci.org/TheInnerLight/RustCloud.svg?branch=master)
+
 # Objectives
 
 Create a Rust library for point cloud processing and analysis.
