@@ -1,4 +1,6 @@
+extern crate nalgebra as na;
+
 mod domain;
-mod vector;
+
 
 

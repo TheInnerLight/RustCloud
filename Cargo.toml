@@ -1,6 +1,7 @@
 [package]
-name = "RustCloud"
+name = "rust_cloud"
 version = "0.1.0"
 authors = ["Phil Curzon <phil@novelfs.org>"]
 
 [dependencies]
+nalgebra = "0.13.0"

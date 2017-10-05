@@ -1,10 +1,8 @@
-use vector::Vector3;
+use na::Vector3;
 
 trait Point3 {
-    fn from_origin(&self) -> Vector3;
+    fn from_origin(&self) -> Vector3<f64>;
 }
-
-
 
 trait SpatialTree<T : Point3> {
     fn find_closest_point(&self, p : Point3) -> T;
