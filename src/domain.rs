@@ -12,7 +12,7 @@ trait Point3 {
 
 /// A three dimensional plane defined by a point3 and a vector3
 struct Plane3 { 
-    position : Box<Point3>, 
+    position : Vector3<f64>, 
     normal : Vector3<f64> 
 }
 
