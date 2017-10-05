@@ -1,5 +1,9 @@
 use na::Vector3;
 
+trait Point2 {
+    fn from_origin(&self) -> Vector2<f64>;
+}
+
 trait Point3 {
     fn from_origin(&self) -> Vector3<f64>;
 }
