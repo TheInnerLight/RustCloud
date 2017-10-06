@@ -3,6 +3,8 @@ Rust Point Cloud library
 
 Travis: ![Build Status](https://travis-ci.org/TheInnerLight/RustCloud.svg?branch=master)
 
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/TheInnerLight/RustCloud.png?columns=all)](https://waffle.io/TheInnerLight/RustCloud?utm_source=badge)
+
 # Objectives
 
 Create a Rust library for point cloud processing and analysis.
