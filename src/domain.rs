@@ -1,23 +1,25 @@
-use na::{Vector2, Vector3};
+use na::{DefaultAllocator, Dim, Vector3, VectorN, U1, U2, U3};
+use na::allocator::Allocator;
+
+/// An n-dimensional point with a defined n-vector from the origin
+pub trait NPoint<N : Dim> where DefaultAllocator: Allocator<f64, N> {
+    fn from_origin(&self) -> VectorN<f64, N>;
+}
 
 /// A two dimensional point with a defined vector from the origin
-trait Point2 {
-    fn from_origin(&self) -> Vector2<f64>;
-}
+pub type Point2 = NPoint<U2>;
 
 /// A three dimensional point with a defined vector from the origin
-trait Point3 {
-    fn from_origin(&self) -> Vector3<f64>;
-}
+pub type Point3 = NPoint<U3>;
 
 /// A three dimensional plane defined by a point3 and a vector3
-struct Plane3 { 
+pub struct Plane3 { 
     position : Vector3<f64>, 
     normal : Vector3<f64> 
 }
 
-/// An approach capable of answering spatial queries
-trait SpatialQueryStrategy<T : Point3> {
+/// An arbitrary structure of points capable of answering spatial queries
+pub trait SpatialQueryStructure<T : NPoint<U3>> {
     fn find_closest_point(&self, p : Point3) -> T;
     fn find_closest_point_within_range(&self, p : Point3, range : f64) -> T;
     fn find_k_nearest_points(&self, p : Point3, k: u32) -> Box<Iterator<Item=T>>;
