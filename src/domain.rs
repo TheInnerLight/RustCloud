@@ -1,4 +1,4 @@
-use na::{DefaultAllocator, Dim, Vector3, VectorN, U1, U2, U3};
+use na::{DefaultAllocator, Dim, Vector3, VectorN, U2, U3};
 use na::allocator::Allocator;
 
 /// An n-dimensional point with a defined n-vector from the origin

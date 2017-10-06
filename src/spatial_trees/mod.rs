@@ -1,4 +1,4 @@
-use na::{DefaultAllocator, Dim, VectorN, U1, U2, U3};
+use na::{DefaultAllocator, Dim};
 use na::allocator::Allocator;
 use domain::NPoint;
 
@@ -20,11 +20,9 @@ impl<N : Dim> KdTree<N> where DefaultAllocator: Allocator<f64, N> {
 }
 
 mod kd_tree {
-    use na::{DefaultAllocator, Dim, Vector3, VectorN, U1, U2, U3};
+    use na::{DefaultAllocator, Dim};
     use na::allocator::Allocator;
-    use std::cmp::Ordering;
     use domain::NPoint;
-    use super::{KdTree};
 
     /// kd-Tree implementation structure
     pub(super) enum KdTreeImpl<N : Dim> where DefaultAllocator: Allocator<f64, N> {
@@ -55,8 +53,7 @@ mod kd_tree {
                 let right = middle.split_off(1);
                 (Some(pts), Some(middle[0]), Some(right))
             } else if pts.len() == 2 {
-                let length = pts.len();
-                let mut middle = pts.split_off(1);
+                let middle = pts.split_off(1);
                 (Some(pts), Some(middle[0]), None)
             } else if pts.len() == 1 {
                 (None, Some(pts[0]), None)
