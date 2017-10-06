@@ -56,7 +56,7 @@ mod kd_tree {
                 (Some(pts), Some(middle[0]), Some(right))
             } else if pts.len() == 2 {
                 let length = pts.len();
-                let mut middle = pts.split_off(length / 2);
+                let mut middle = pts.split_off(1);
                 (Some(pts), Some(middle[0]), None)
             } else if pts.len() == 1 {
                 (None, Some(pts[0]), None)
