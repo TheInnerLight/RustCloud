@@ -1,4 +1,3 @@
-
 # RustCloud
 Rust Point Cloud library
 
