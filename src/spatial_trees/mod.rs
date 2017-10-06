@@ -66,15 +66,15 @@ mod kd_tree {
         }
     }
 
-    pub(super) fn build<N : Dim, TItem : NPoint<N> + Copy + 'static>(pts : &Vec<TItem>, dimIdx :usize) -> KdTreeImpl<N> where DefaultAllocator: Allocator<f64, N> {
+    pub(super) fn build<N : Dim, TItem : NPoint<N> + Copy + 'static>(pts : &Vec<TItem>, dim_idx :usize) -> KdTreeImpl<N> where DefaultAllocator: Allocator<f64, N> {
         match pts.first() {
             Some(first_pt) => {
-                let next_dim_idx = if dimIdx + 1 >= first_pt.from_origin().ncols() {0} else {dimIdx + 1};
-                match split_vec_with_median(pts, dimIdx) {
-                    (Some(vec1), Some(pt), Some(vec2))  => KdTreeImpl::Node(next_dim_idx,     Box::new(build(&vec1, next_dim_idx)),   Box::new(pt),     Box::new(build(&vec2, next_dim_idx))),
-                    (Some(vec1), Some(pt), None      )  => KdTreeImpl::Node(next_dim_idx,     Box::new(build(&vec1, next_dim_idx)),   Box::new(pt),     Box::new(KdTreeImpl::Empty())),
-                    (None,       Some(pt), Some(vec2))  => KdTreeImpl::Node(next_dim_idx,     Box::new(KdTreeImpl::Empty()),        Box::new(pt),     Box::new(build(&vec2, next_dim_idx))),
-                    (None,       Some(pt), None      )  => KdTreeImpl::Node(next_dim_idx,     Box::new(KdTreeImpl::Empty()),        Box::new(pt),     Box::new(KdTreeImpl::Empty())),
+                let next_dim_idx = if dim_idx + 1 >= first_pt.from_origin().ncols() {0} else {dim_idx + 1};
+                match split_vec_with_median(pts, dim_idx) {
+                    (Some(vec1), Some(pt), Some(vec2))  => KdTreeImpl::Node(dim_idx,     Box::new(build(&vec1, next_dim_idx)),   Box::new(pt),     Box::new(build(&vec2, next_dim_idx))),
+                    (Some(vec1), Some(pt), None      )  => KdTreeImpl::Node(dim_idx,     Box::new(build(&vec1, next_dim_idx)),   Box::new(pt),     Box::new(KdTreeImpl::Empty())),
+                    (None,       Some(pt), Some(vec2))  => KdTreeImpl::Node(dim_idx,     Box::new(KdTreeImpl::Empty()),          Box::new(pt),     Box::new(build(&vec2, next_dim_idx))),
+                    (None,       Some(pt), None      )  => KdTreeImpl::Node(dim_idx,     Box::new(KdTreeImpl::Empty()),          Box::new(pt),     Box::new(KdTreeImpl::Empty())),
                     (None,       None,     None      )  => panic!("Should be impossible to have a first point but still split into (None, None, None)."),
                     (_      ,    None,     _         )  => panic!("Meaningless result: point must be contained in a kd-tree node.")
                 }
