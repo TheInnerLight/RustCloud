@@ -1,3 +1,4 @@
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/TheInnerLight/RustCloud.png?columns=all)](https://waffle.io/TheInnerLight/RustCloud?utm_source=badge)
 # RustCloud
 Rust Point Cloud library
 
