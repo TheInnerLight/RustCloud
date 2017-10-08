@@ -28,7 +28,8 @@ impl<P : NPoint + Copy> KdTree<P> where DefaultAllocator: Allocator<f64, P::N> {
 mod kd_tree {
     use na::{DefaultAllocator, DimName, U1, VectorN};
     use na::allocator::Allocator;
-    use domain::{Hyperplane, NPoint};
+    use domain::{Hyperplane, Hypersphere, NPoint};
+    use std::iter;
 
     /// kd-Tree implementation structure
     pub(super) enum KdTreeImpl<P : NPoint> where DefaultAllocator: Allocator<f64, P::N> {
@@ -100,29 +101,45 @@ mod kd_tree {
                 let mut normal_vector = vec![0.0; P::N::dim()];
                 normal_vector[dim_idx] = 1.0;
                 let normal = VectorN::from_data_statically_unchecked(DefaultAllocator::allocate_from_iterator(P::N::name(), U1, normal_vector));
-                Some(Hyperplane {position : pt.from_origin().clone(), normal : normal })
+                Some(Hyperplane {origin : pt.from_origin().clone(), normal : normal })
             },
             &KdTreeImpl::Empty() => None
         }
     }
 
-    pub(super) fn find_nearest<P : NPoint>(tree : KdTreeImpl<P>, pt : P) -> Option<P> where DefaultAllocator: Allocator<f64, P::N>  {
-        unsafe {
-            match tree {
-                KdTreeImpl::Node(dim_idx, l, cur_pt, r) => {
-                    let cur_pt_vec = cur_pt.from_origin();
-                    let pt_vec = pt.from_origin();
-                    let next = if pt_vec.vget_unchecked(dim_idx) < cur_pt_vec.vget_unchecked(dim_idx) { l } else { r };
-                    let nested_nearest = find_nearest(*next, pt.clone());
-                    match nested_nearest {
-                        Some(_) => None,
-                        None => Some(cur_pt.clone())
-                    }
-                },
-                KdTreeImpl::Empty() => {
-                    None
+    fn closest_to<KP : NPoint, P : NPoint<N = KP::N>>(opt_pt1 : &Option<KP>, pt : &KP, opt_pt2 : &Option<KP>, search_pt : &P) -> KP where DefaultAllocator: Allocator<f64, KP::N> {
+        opt_pt1.iter().chain(opt_pt2.iter()).chain(iter::once(pt)).min_by(|a, b| {
+            (a.from_origin() - search_pt.from_origin()).norm()
+                .partial_cmp(&(b.from_origin() - search_pt.from_origin()).norm())
+                .unwrap()
+        }).unwrap().clone()
+    }
+
+    pub(super) fn find_nearest<KP : NPoint, P : NPoint<N = KP::N>>(tree : &KdTreeImpl<KP>, search_pt : &P) -> Option<KP> where DefaultAllocator: Allocator<f64, KP::N>  {
+        match tree {
+            &KdTreeImpl::Node(dim_idx, ref l, ref cur_pt, ref r) => unsafe {
+                let cur_pt_vec = cur_pt.from_origin();
+                let pt_vec = search_pt.from_origin();
+                let (first, second) = if pt_vec.vget_unchecked(dim_idx) < cur_pt_vec.vget_unchecked(dim_idx) { (l, r) } else { (r, l) };
+                let first_possible_nearest = find_nearest(first, search_pt);
+                match first_possible_nearest {
+                    Some(_) => {
+                        let search_sphere = Hypersphere {origin : cur_pt_vec.clone(), radius : (cur_pt_vec - pt_vec).norm()};
+                        let plane = splitting_hyperplane(&tree).expect("Hyperplane should never be null, we have already ensured the kdtree type is not empty.");
+                        if plane.intersects_hypersphere(&search_sphere) {
+                            let second_possible_nearest = find_nearest(second, search_pt);
+                            Some(closest_to(&first_possible_nearest, cur_pt, &second_possible_nearest, search_pt))
+                        } else {
+                            Some(closest_to(&first_possible_nearest, cur_pt, &None, search_pt))
+                        }
+                    },
+                    None => Some(cur_pt.clone())
                 }
+            },
+            &KdTreeImpl::Empty() => {
+                None
             }
         }
+        
     }
 }
