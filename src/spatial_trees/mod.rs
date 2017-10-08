@@ -3,9 +3,9 @@ use na::allocator::Allocator;
 use domain::{Hyperplane, NPoint};
 
 /// A kd tree
-pub struct KdTree<P : NPoint + Copy>(kd_tree::KdTreeImpl<P>) where DefaultAllocator: Allocator<f64, P::N> ;
+pub struct KdTree<P : NPoint>(kd_tree::KdTreeImpl<P>) where DefaultAllocator: Allocator<f64, P::N> ;
 
-impl<P : NPoint + Copy> KdTree<P> where DefaultAllocator: Allocator<f64, P::N> {
+impl<P : NPoint> KdTree<P> where DefaultAllocator: Allocator<f64, P::N> {
     /// Get all the points from the kd-tree
     fn get_points(&self) -> Vec<P>  {
         let mut pts = Vec::new();
